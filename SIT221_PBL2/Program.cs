@@ -6,10 +6,12 @@ namespace SIT221_PBL2
     {
         static void Main(string[] args)
         {
-            var board = new Board().FirstNode(16);
+            int dimensions = 6;
+            bool openTour = false;
+            var board = new Board(dimensions, openTour);
 
             // This might be cool, but it's too slow and never completes for m > 5
-            //var search = new DepthFirstSearch(board);
+            // var search = new DepthFirstSearch(board);
             var search = new WarnsdorfsRule(board);
 
             search.PerformSearch();
@@ -36,7 +38,5 @@ namespace SIT221_PBL2
 }
 
 // TODO: comments/docs
-// current limitations:
-// only open search
-// only 0,0 starting position
-
+// rules/docs around open tours/starting positions, etc
+// current limitations: only 0,0 starting position

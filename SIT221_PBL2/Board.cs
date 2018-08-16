@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace SIT221_PBL2
 {
@@ -7,6 +6,7 @@ namespace SIT221_PBL2
     {
         public enum Cell { Knight, Unvisited, Visited };
 
+        private bool OpenTour;
         private int Dim; // Board is m * m square dimensions
         private int CurrentKnightIndex;
         private int StartIndex;
@@ -32,16 +32,16 @@ namespace SIT221_PBL2
             return Enumerable.SequenceEqual(board.Cells, Cells);
         }
 
-        public Board() {}
-
-        private Board(int dimensions)
+        public Board(int dimensions, bool openTour)
         {
             Parent = null;
             Dim = dimensions;
+            OpenTour = openTour;
             Visited = 1;
-            CurrentKnightIndex = 0; // TODO: does starting location matter?
-            StartIndex = 0; // TODO: same as current knight index here
-
+            // TODO: implement starting location pass through
+            // for now, just start in the middle-ish of the board
+            CurrentKnightIndex = Dim * Dim / 2 + Dim / 2;
+            StartIndex = CurrentKnightIndex;
             Cells = new Cell[Dim * Dim];
             for (int i = FirstTileIndex; i <= LastTileIndex; i++)
                 this[i] = Cell.Unvisited;
@@ -53,6 +53,7 @@ namespace SIT221_PBL2
         {
             Parent = prevBoard;
             Dim = prevBoard.Dim;
+            OpenTour = prevBoard.OpenTour;
             Visited = prevBoard.Visited + 1;
             CurrentKnightIndex = nextKnightIndex;
             StartIndex = prevBoard.StartIndex;
@@ -66,11 +67,6 @@ namespace SIT221_PBL2
         }
 
         public INode Parent { get; set; }
-
-        public INode FirstNode(object dim)
-        {
-            return new Board((int)dim);
-        }
 
         public INode[] NextNodes()
         {
@@ -91,8 +87,9 @@ namespace SIT221_PBL2
 
         public bool IsTarget()
         {
-            // TODO: closed/open? currently this is open
-            return Visited == Dim * Dim;
+            bool completedTour = Visited == Dim * Dim;
+
+            return OpenTour && completedTour || completedTour && ReachableTileIndices().Contains(StartIndex);
         }
 
 
@@ -149,13 +146,9 @@ namespace SIT221_PBL2
 
         private int[] ValidTileIndices(int[] tileIndices)
         {
-            Func<int, bool> tileIsReachable, cellIsVisited;
             for (int i = 0; i < MaxPotentialMoves; i++)
             {
-                // TODO: open will need some way of handling revisiting the start square
-                tileIsReachable = t => tileIndices[t] != -1;
-                cellIsVisited = t => Cells[tileIndices[t]] == Cell.Visited;
-                if (tileIsReachable(i) && cellIsVisited(i))
+                if (tileIndices[i] != -1 && Cells[tileIndices[i]] == Cell.Visited)
                     tileIndices[i] = -1;
             }
 

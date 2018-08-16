@@ -4,8 +4,6 @@
     {
         INode Parent { get; set; }
 
-        INode FirstNode(object state);
-
         INode[] NextNodes();
 
         bool IsTarget();
