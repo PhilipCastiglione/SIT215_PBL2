@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SIT221_PBL2
+﻿namespace SIT221_PBL2
 {
     public class DepthFirstSearch : Search
     {

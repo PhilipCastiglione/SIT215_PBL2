@@ -6,9 +6,9 @@ namespace SIT221_PBL2
     {
         static void Main(string[] args)
         {
-            var board = new Board().FirstNode(5);
+            var board = new Board().FirstNode(16);
 
-            // This might be cool, but it's too slow and never completes
+            // This might be cool, but it's too slow and never completes for m > 5
             //var search = new DepthFirstSearch(board);
             var search = new WarnsdorfsRule(board);
 
@@ -36,3 +36,7 @@ namespace SIT221_PBL2
 }
 
 // TODO: comments/docs
+// current limitations:
+// only open search
+// only 0,0 starting position
+
