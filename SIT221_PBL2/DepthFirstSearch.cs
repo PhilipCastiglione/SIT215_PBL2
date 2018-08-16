@@ -2,21 +2,11 @@
 
 namespace SIT221_PBL2
 {
-    public class DepthFirstSearch
+    public class DepthFirstSearch : Search
     {
-        private Stack<INode> ExploredNodes;
-        private Stack<INode> Frontier;
-        public INode SuccessNode;
+        public DepthFirstSearch(INode firstNode) : base(firstNode) { }
 
-        public DepthFirstSearch(INode firstNode)
-        {
-            ExploredNodes = new Stack<INode>();
-            Frontier = new Stack<INode>();
-            Frontier.Push(firstNode);
-            SuccessNode = null;
-        }
-
-        public void PerformSearch()
+        public override void PerformSearch()
         {
             while (Frontier.Count > 0)
             {
@@ -40,21 +30,6 @@ namespace SIT221_PBL2
                     
                 ExploredNodes.Push(node);
             }
-        }
-
-        public Stack<INode> SuccessPath()
-        {
-            var successPath = new Stack<INode>();
-
-            var currentNode = SuccessNode;
-
-            while (currentNode != null)
-            {
-                successPath.Push(currentNode);
-                currentNode = currentNode.Parent;
-            }
-
-            return successPath;
         }
     }
 }

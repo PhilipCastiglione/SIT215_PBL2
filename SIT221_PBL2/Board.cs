@@ -10,7 +10,7 @@ namespace SIT221_PBL2
         private int Dim; // Board is m * m square dimensions
         private int CurrentKnightIndex;
         private int StartIndex;
-        private int Visited;
+        public int Visited;
         public Cell[] Cells;
 
         private const int FirstTileIndex = 0;
