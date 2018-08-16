@@ -5,8 +5,8 @@ namespace SIT221_PBL2
     public abstract class Search
     {
         public INode SuccessNode;
-        protected Stack<INode> Frontier;
-        protected Stack<INode> ExploredNodes;
+        public Stack<INode> Frontier;
+        public Stack<INode> ExploredNodes;
 
         public Search(INode firstNode)
         {

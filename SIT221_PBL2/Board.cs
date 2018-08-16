@@ -92,14 +92,14 @@ namespace SIT221_PBL2
         public bool IsTarget()
         {
             // TODO: closed/open? currently this is open
-            return Visited == 64;
+            return Visited == Dim * Dim;
         }
 
 
         private int[] ReachableTileIndices()
         {
             // initialise array with sentinals indicating invalid moves
-            int[] reachableTileIndices = new int[8];
+            int[] reachableTileIndices = new int[MaxPotentialMoves];
             for (int i = 0; i < MaxPotentialMoves; i++)
                 reachableTileIndices[i] = -1;
 
@@ -149,17 +149,40 @@ namespace SIT221_PBL2
 
         private int[] ValidTileIndices(int[] tileIndices)
         {
-            Func<int, bool> tileIsReachable, cellIsVisited, cellIsFinalMove;
+            Func<int, bool> tileIsReachable, cellIsVisited;
             for (int i = 0; i < MaxPotentialMoves; i++)
             {
+                // TODO: open will need some way of handling revisiting the start square
                 tileIsReachable = t => tileIndices[t] != -1;
                 cellIsVisited = t => Cells[tileIndices[t]] == Cell.Visited;
-                cellIsFinalMove = t => tileIndices[t] == StartIndex && Visited == 63;
-                if (tileIsReachable(i) && cellIsVisited(i) && !cellIsFinalMove(i))
+                if (tileIsReachable(i) && cellIsVisited(i))
                     tileIndices[i] = -1;
             }
 
             return tileIndices;
+        }
+
+        public override string ToString()
+        {
+            string output = "";
+            for (int i = FirstTileIndex; i <= LastTileIndex; i++)
+            {
+                if (i > 0 && i % Dim == 0)
+                    output += "\n";
+                switch (this[i])
+                {
+                    case Cell.Knight:
+                        output += "K";
+                        break;
+                    case Cell.Unvisited:
+                        output += "U";
+                        break;
+                    case Cell.Visited:
+                        output += "V";
+                        break;
+                }
+            }
+            return output;
         }
     }
 }

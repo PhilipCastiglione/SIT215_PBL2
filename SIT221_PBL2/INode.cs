@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SIT221_PBL2
+﻿namespace SIT221_PBL2
 {
     public interface INode
     {

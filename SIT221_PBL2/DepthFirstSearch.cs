@@ -11,6 +11,7 @@ namespace SIT221_PBL2
             while (Frontier.Count > 0)
             {
                 INode node = Frontier.Pop();
+                ExploredNodes.Push(node);
 
                 if (node.IsTarget())
                 {
@@ -27,8 +28,6 @@ namespace SIT221_PBL2
                         Frontier.Push(n);
                     }
                 }
-                    
-                ExploredNodes.Push(node);
             }
         }
     }
