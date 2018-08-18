@@ -180,13 +180,13 @@ namespace SIT221_PBL2
                 switch (this[i])
                 {
                     case Cell.Knight:
-                        output += "K";
+                        output += "K ";
                         break;
                     case Cell.Unvisited:
-                        output += "U";
+                        output += "U ";
                         break;
                     case Cell.Visited:
-                        output += "V";
+                        output += "V ";
                         break;
                 }
             }

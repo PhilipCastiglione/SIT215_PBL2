@@ -31,6 +31,7 @@ namespace SIT221_PBL2
                 foreach (INode n in path)
                 {
                     Console.WriteLine("---------------");
+                    Console.WriteLine($"Move: {n.Depth}");
                     Console.WriteLine(n);
                     Console.WriteLine("---------------");
                 }
