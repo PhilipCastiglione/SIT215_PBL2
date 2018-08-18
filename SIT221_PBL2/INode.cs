@@ -5,9 +5,12 @@
      */
     public interface INode
     {
+        int Depth { get; set; }
         INode Parent { get; set; }
 
         INode[] NextNodes();
+
+        bool IsLeaf();
 
         bool IsTarget();
     }

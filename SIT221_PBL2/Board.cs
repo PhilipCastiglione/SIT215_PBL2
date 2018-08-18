@@ -11,7 +11,7 @@ namespace SIT221_PBL2
         private int Dim; // Board is m * m square dimensions
         private int CurrentKnightIndex;
         private int StartIndex;
-        public int Visited;
+        public int Depth { get; set; }
         public Cell[] Cells;
 
         private const int FirstTileIndex = 0;
@@ -40,10 +40,10 @@ namespace SIT221_PBL2
             Parent = null;
             Dim = dimensions;
             OpenTour = openTour;
-            Visited = 1;
+            Depth = 1;
 
             // start index is set optionally, otherwise pick a middle tile
-            StartIndex = (startIndex == -1)? Dim * Dim / 2 : startIndex;
+            StartIndex = (startIndex == -1)? (Dim / 2) * Dim + Dim / 2 : startIndex;
             CurrentKnightIndex = StartIndex;
 
             Cells = new Cell[Dim * Dim];
@@ -59,7 +59,7 @@ namespace SIT221_PBL2
             Parent = prevBoard;
             Dim = prevBoard.Dim;
             OpenTour = prevBoard.OpenTour;
-            Visited = prevBoard.Visited + 1;
+            Depth = prevBoard.Depth + 1;
             CurrentKnightIndex = nextKnightIndex;
             StartIndex = prevBoard.StartIndex;
 
@@ -92,13 +92,16 @@ namespace SIT221_PBL2
             return nextNodes;
         }
 
+        public bool IsLeaf()
+        {
+            return Depth == Dim * Dim;
+        }
+
         public bool IsTarget()
         {
-            bool completedTour = Visited == Dim * Dim;
-
             // an open tour only requires that we have finished a tour, a closed tour requires that
             // we can reach our start index from this position as well
-            return OpenTour && completedTour || completedTour && ReachableTileIndices(CurrentKnightIndex).Contains(StartIndex);
+            return OpenTour && IsLeaf() || IsLeaf() && ReachableTileIndices(CurrentKnightIndex).Contains(StartIndex);
         }
 
         private int[] ReachableTileIndices(int index)

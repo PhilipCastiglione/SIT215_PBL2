@@ -50,6 +50,9 @@ namespace SIT221_PBL2
                         SuccessNode = nextNode;
                         return;
                     }
+                    // this is an optimisation to pre-recognise leaves that aren't successful as explored
+                    if (nextNode.IsLeaf() && !ExploredNodes.Contains(nextNode))
+                        ExploredNodes.Push(nextNode);
 
                     // we want the best node we can see out of the next nodes, based on how many moves each has
                     nextNodeMoves = nextNode.NextNodes().Where(n => !ExploredNodes.Contains(n)).Count();

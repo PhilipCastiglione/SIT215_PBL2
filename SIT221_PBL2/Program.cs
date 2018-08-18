@@ -8,9 +8,9 @@ namespace SIT221_PBL2
         {
             // dimensions should be no less than 5 to find a solution
             // closed tours only exist for some configurations and stating positions
-            int dimensions = 5;
+            int dimensions = 6;
             bool openTour = false;
-            int startIndex = 0;
+            int startIndex = 0; // start index is optional and will default to the middle of the board
             var board = new Board(dimensions, openTour);//, startIndex);
 
             // Instantiate our search with the first node
