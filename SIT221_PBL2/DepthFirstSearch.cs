@@ -1,5 +1,9 @@
 ﻿namespace SIT221_PBL2
 {
+    /**
+     * Straightforward DFS implementation. DFS can be used for Knight's Tour on
+     * small boards practically. Uninformed search rapidly becomes too slow.
+     */
     public class DepthFirstSearch : Search
     {
         public DepthFirstSearch(INode firstNode) : base(firstNode) { }

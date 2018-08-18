@@ -6,12 +6,15 @@ namespace SIT221_PBL2
     {
         static void Main(string[] args)
         {
-            int dimensions = 6;
+            // dimensions should be no less than 5 to find a solution
+            // closed tours only exist for some configurations and stating positions
+            int dimensions = 5;
             bool openTour = false;
-            var board = new Board(dimensions, openTour);
+            int startIndex = 0;
+            var board = new Board(dimensions, openTour);//, startIndex);
 
-            // This might be cool, but it's too slow and never completes for m > 5
-            // var search = new DepthFirstSearch(board);
+            // Instantiate our search with the first node
+            // var search = new DepthFirstSearch(board); // DFS is cool, but too slow for m > 5
             var search = new WarnsdorfsRule(board);
 
             search.PerformSearch();
@@ -36,7 +39,3 @@ namespace SIT221_PBL2
         }
     }
 }
-
-// TODO: comments/docs
-// rules/docs around open tours/starting positions, etc
-// current limitations: only 0,0 starting position

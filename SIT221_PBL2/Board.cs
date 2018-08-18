@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace SIT221_PBL2
 {
@@ -18,6 +19,7 @@ namespace SIT221_PBL2
 
         private const int MaxPotentialMoves = 8;
 
+        // syntactic sugar
         private Cell this[int index]
         {
             get => Cells[index];
@@ -32,16 +34,18 @@ namespace SIT221_PBL2
             return Enumerable.SequenceEqual(board.Cells, Cells);
         }
 
-        public Board(int dimensions, bool openTour)
+        //  this is our first node
+        public Board(int dimensions, bool openTour, int startIndex = -1)
         {
             Parent = null;
             Dim = dimensions;
             OpenTour = openTour;
             Visited = 1;
-            // TODO: implement starting location pass through
-            // for now, just start in the middle-ish of the board
-            CurrentKnightIndex = Dim * Dim / 2 + Dim / 2;
-            StartIndex = CurrentKnightIndex;
+
+            // start index is set optionally, otherwise pick a middle tile
+            StartIndex = (startIndex == -1)? Dim * Dim / 2 : startIndex;
+            CurrentKnightIndex = StartIndex;
+
             Cells = new Cell[Dim * Dim];
             for (int i = FirstTileIndex; i <= LastTileIndex; i++)
                 this[i] = Cell.Unvisited;
@@ -49,6 +53,7 @@ namespace SIT221_PBL2
             this[CurrentKnightIndex] = Cell.Knight;
         }
 
+        // build a next node
         private Board(Board prevBoard, int nextKnightIndex)
         {
             Parent = prevBoard;
@@ -70,12 +75,14 @@ namespace SIT221_PBL2
 
         public INode[] NextNodes()
         {
-            int[] newNodeIndices = ValidTileIndices(ReachableTileIndices());
+            // the new nodes indices are those we can reach that are also valid
+            int[] newNodeIndices = ValidTileIndices(ReachableTileIndices(CurrentKnightIndex));
 
             int numberOfNewNodes = newNodeIndices.Where(i => i != -1).Count();
             INode[] nextNodes = new INode[numberOfNewNodes];
             int nextNodeIndex = 0;
 
+            // build the actual next nodes and return a dense array
             for (int i = 0; i < MaxPotentialMoves; i++)
             {
                 if (newNodeIndices[i] != -1)
@@ -89,11 +96,12 @@ namespace SIT221_PBL2
         {
             bool completedTour = Visited == Dim * Dim;
 
-            return OpenTour && completedTour || completedTour && ReachableTileIndices().Contains(StartIndex);
+            // an open tour only requires that we have finished a tour, a closed tour requires that
+            // we can reach our start index from this position as well
+            return OpenTour && completedTour || completedTour && ReachableTileIndices(CurrentKnightIndex).Contains(StartIndex);
         }
 
-
-        private int[] ReachableTileIndices()
+        private int[] ReachableTileIndices(int index)
         {
             // initialise array with sentinals indicating invalid moves
             int[] reachableTileIndices = new int[MaxPotentialMoves];
@@ -103,43 +111,43 @@ namespace SIT221_PBL2
             // _
             //  |
             //  |
-            if (CurrentKnightIndex - 2 * Dim >= FirstTileIndex && CurrentKnightIndex % Dim >= 1)
-                reachableTileIndices[0] = CurrentKnightIndex - 2 * Dim - 1;
+            if (index - 2 * Dim >= FirstTileIndex && index % Dim >= 1)
+                reachableTileIndices[0] = index - 2 * Dim - 1;
             //   _
             //  |
             //  |
-            if (CurrentKnightIndex - 2 * Dim >= FirstTileIndex && CurrentKnightIndex % Dim <= Dim - 2)
-                reachableTileIndices[1] = CurrentKnightIndex - 2 * Dim + 1;
+            if (index - 2 * Dim >= FirstTileIndex && index % Dim <= Dim - 2)
+                reachableTileIndices[1] = index - 2 * Dim + 1;
             //
             // ___|
             //
-            if (CurrentKnightIndex - 1 * Dim >= FirstTileIndex && CurrentKnightIndex % Dim <= Dim - 3)
-                reachableTileIndices[2] = CurrentKnightIndex - 1 * Dim + 2;
+            if (index - 1 * Dim >= FirstTileIndex && index % Dim <= Dim - 3)
+                reachableTileIndices[2] = index - 1 * Dim + 2;
             //
             // ___
             //    |
-            if (CurrentKnightIndex + 1 * Dim <= Dim * Dim - 1 && CurrentKnightIndex % Dim <= Dim - 3)
-                reachableTileIndices[3] = CurrentKnightIndex + 1 * Dim + 2;
+            if (index + 1 * Dim <= Dim * Dim - 1 && index % Dim <= Dim - 3)
+                reachableTileIndices[3] = index + 1 * Dim + 2;
             //
             //  |
             //  |_
-            if (CurrentKnightIndex + 2 * Dim <= Dim * Dim - 1 && CurrentKnightIndex % Dim <= Dim - 2)
-                reachableTileIndices[4] = CurrentKnightIndex + 2 * Dim + 1;
+            if (index + 2 * Dim <= Dim * Dim - 1 && index % Dim <= Dim - 2)
+                reachableTileIndices[4] = index + 2 * Dim + 1;
             //
             //  |
             // _|
-            if (CurrentKnightIndex + 2 * Dim <= Dim * Dim - 1 && CurrentKnightIndex % Dim >= 1)
-                reachableTileIndices[5] = CurrentKnightIndex + 2 * Dim - 1;
+            if (index + 2 * Dim <= Dim * Dim - 1 && index % Dim >= 1)
+                reachableTileIndices[5] = index + 2 * Dim - 1;
             //
             //  ___
             // |
-            if (CurrentKnightIndex + 1 * Dim <= Dim * Dim - 1 && CurrentKnightIndex % Dim >= 2)
-                reachableTileIndices[6] = CurrentKnightIndex + 1 * Dim - 2;
+            if (index + 1 * Dim <= Dim * Dim - 1 && index % Dim >= 2)
+                reachableTileIndices[6] = index + 1 * Dim - 2;
             //
             // |___
             //
-            if (CurrentKnightIndex - 1 * Dim >= FirstTileIndex && CurrentKnightIndex % Dim >= 2)
-                reachableTileIndices[7] = CurrentKnightIndex - 1 * Dim - 2;
+            if (index - 1 * Dim >= FirstTileIndex && index % Dim >= 2)
+                reachableTileIndices[7] = index - 1 * Dim - 2;
 
             return reachableTileIndices;
         }
@@ -148,8 +156,12 @@ namespace SIT221_PBL2
         {
             for (int i = 0; i < MaxPotentialMoves; i++)
             {
-                if (tileIndices[i] != -1 && Cells[tileIndices[i]] == Cell.Visited)
-                    tileIndices[i] = -1;
+                if (tileIndices[i] != -1)
+                {
+                    // it is not valid to revisit a tile we have been to already
+                    if (Cells[tileIndices[i]] == Cell.Visited)
+                        tileIndices[i] = -1;
+                }
             }
 
             return tileIndices;
