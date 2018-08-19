@@ -45,3 +45,7 @@ Variables:
 - `dimensions`: these are the (square) dimensions for the board
 - `openTour`: true if the tour should be an open tour, false if it should be closed
 - `startIndex`: this is an optional variable that can be used to choose a specific starting location for the Knight. note that you will need to change the call to `new Board` to use this variable. The index 0 refers to the topleft cell, (dimensions * dimensions - 1) would refer to the bottom right cell. Unexpected behaviour will result for indices not on the board.
+
+#### Whoops
+
+Phil mixed unit codes up and you will see SIT221 in the namespaces and solution in the code. This is a just a mistake you can ignore.
